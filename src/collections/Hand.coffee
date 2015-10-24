@@ -6,19 +6,30 @@ class window.Hand extends Backbone.Collection
   hit: ->
     @add(@deck.pop())
     person = if @isDealer then 'Dealer' else 'Player' 
-    score = if @isDealer then @minScore() else @scores()[0] 
 
-    if score > 21 
+    score = @scores()
+    console.log(score)
+
+    max = Math.max(score[0], score[1])
+    min = Math.min(score[0], score[1])
+    console.log("Max", max)
+    console.log("Max", min)
+
+    if max > 21
+      max = min
+
+
+    if max > 21 
       alert(person + 'loses') 
     else if (score is 21)
       alert(person + 'wins')
+
     @last()
  
   stand: ->
     @array[0].flip()
     @hit(true) while @minScore() < 17 
-    
-
+    @trigger('standEvent')
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
